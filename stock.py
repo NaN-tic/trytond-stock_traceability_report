@@ -11,12 +11,10 @@ from trytond.wizard import Wizard, StateView, StateReport, Button
 from trytond.transaction import Transaction
 from trytond.modules.html_report.html_report import HTMLReport
 from trytond.modules.html_report.engine import DualRecord
-
+from trytond.url import http_host
 
 __all__ = ['PrintStockTraceabilityStart', 'PrintStockTraceability',
     'PrintStockTraceabilityReport']
-
-BASE_URL = config.get('web', 'base_url')
 
 
 class PrintStockTraceabilityStart(ModelView):
@@ -116,20 +114,8 @@ class PrintStockTraceabilityReport(HTMLReport):
         parameters['show_date'] = True if data.get('from_date') else False
         parameters['production'] = True if Production else False
         parameters['lot'] = True if Lot else False
-        # TODO get url from trytond.url issue8767
-        if BASE_URL:
-            base_url = '%s/#%s' % (
-                BASE_URL, Transaction().database.name)
-        elif t_context.get('_request'):
-            base_url = '%s://%s/#%s' % (
-                t_context['_request']['scheme'],
-                t_context['_request']['http_host'],
-                Transaction().database.name
-                )
-        else:
-            base_url = None
-
-        parameters['base_url'] = base_url
+        parameters['base_url'] = '%s/#%s' % (http_host(),
+            Transaction().database.name)
         parameters['company'] = DualRecord(Company(company_id))
 
         # Locations
