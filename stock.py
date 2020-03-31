@@ -309,7 +309,7 @@ class PrintStockTraceabilityReport(HTMLReport):
 
         with Transaction().set_context(**context):
             records, parameters = cls.prepare(data)
-            return super(PrintStockTraceabilitySReport, cls).execute(ids, {
+            return super(PrintStockTraceabilityReport, cls).execute(ids, {
                     'name': 'stock.traceability.report',
                     'model': data['model'],
                     'records': records,
