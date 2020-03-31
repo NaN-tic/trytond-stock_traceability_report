@@ -24,7 +24,7 @@ class StockTraceabilityReportTestCase(ModuleTestCase):
         Product = pool.get('product.product')
         Location = pool.get('stock.location')
         Move = pool.get('stock.move')
-        PrintStockTraceabilitySReport = pool.get('stock.traceability.report', type='report')
+        PrintStockTraceabilityReport = pool.get('stock.traceability.report', type='report')
         PrintStockTraceability = pool.get('stock.print_traceability', type='wizard')
 
         unit, = Uom.search([('name', '=', 'Unit')])
@@ -63,7 +63,7 @@ class StockTraceabilityReportTestCase(ModuleTestCase):
             print_traceability.start.to_date = None
             with Transaction().set_context(active_ids=[product.id], active_model='product.product'):
                 _, data = print_traceability.do_print_(None)
-                records, parameters = PrintStockTraceabilitySReport.prepare(data)
+                records, parameters = PrintStockTraceabilityReport.prepare(data)
                 record, = records
                 self.assertEqual(type(record['product']), DualRecord)
                 self.assertEqual(record['supplier_incommings_total'], 146)
