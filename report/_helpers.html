@@ -5,7 +5,7 @@
   {% if model == 'purhcase.line' %}{% set label = _('Purchase Line') %}{% endif %}
   {% if model == 'stock.move' %}{% set label = _('Move') %}{% endif %}
   {% if model == 'production' %}{% set label = _('Production') %}{% endif %}
-  <a href='{{ parameters['base_url'] }}/model/{{ model }}/{{ id }};name="{{ label }}"'>{{ record.origin.render.rec_name }}</a>
+  <a href='{{ parameters.base_url }}/model/{{ model }}/{{ id }};name="{{ label }}"'>{{ record.origin.render.rec_name }}</a>
 {% endmacro %}
 
 {% macro draw_table_shipment(key, records, parameters) %}
@@ -23,14 +23,14 @@
   </thead>
   <tbody>
     {% for record in records %}<tr>
-      {% if parameters.get('lot') %}<td>{% if record.raw.lot %}<a href='{{ parameters['base_url'] }}/model/stock.lot/{{ record.lot.raw.id }};name="{{ _('Lots') }}"'>{{ record.lot.render.number }}</a>{% endif %}</td>{% endif %}
+      {% if parameters.get('lot') %}<td>{% if record.raw.lot %}<a href='{{ parameters.base_url }}/model/stock.lot/{{ record.lot.raw.id }};name="{{ _('Lots') }}"'>{{ record.lot.render.number }}</a>{% endif %}</td>{% endif %}
       <td>{{ record.render.quantity }}</td>
-      <td>{{ record.uom.render.rec_name }}</td>
+      <td>{{ record.uom.render.symbol }}</td>
       <td>{% if record.origin %}{{ origin(record, parameters) }}{% endif %}
       </td>
       <td>{{ record.render.effective_date }}</td>
       <td>{{ record.shipment and record.shipment.warehouse.render.rec_name }}</td>
-      <td><a href='{{ parameters['base_url'] }}/model/stock.move/{{ record.raw.id }};name="{{ _('Move') }}"'><i class="fas fa-arrow-right"></i></a></td>
+      <td><a href='{{ parameters.base_url }}/model/stock.move/{{ record.raw.id }};name="{{ record.render.rec_name }}"'><i class="fas fa-arrow-right"></i></a></td>
     </tr>{% endfor %}
   </tbody>
 </table>
@@ -51,14 +51,14 @@
   </thead>
   <tbody>
     {% for record in records %}<tr>{% set production=record|attr(in_out) %}
-      {% if parameters.get('lot') %}<td>{% if record.raw.lot %}<a href='{{ parameters['base_url'] }}/model/stock.lot/{{ record.raw.id }};name="{{ _('Lots') }}"'>{{ record.lot and record.lot.render.number }}</a>{% endif %}</td>{% endif %}
-      <td>{{ record.render.quantity }}</td>
-      <td>{{ record.uom.render.rec_name }}</td>
+      {% if parameters.get('lot') %}<td>{% if record.raw.lot %}<a href='{{ parameters.base_url }}/model/stock.lot/{{ record.lot.raw.id }};name="{{ _('Lots') }}"'>{{ record.lot and record.lot.render.number }}</a>{% endif %}</td>{% endif %}
+      <td><a href='{{ parameters.base_url }}/model/stock.move/{{ record.raw.id }};name="{{ record.render.rec_name }}"'>{{ record.render.quantity }}</a></td>
+      <td>{{ record.uom.render.symbol }}</td>
       <td>{% if record.origin %}{{ origin(record, parameters) }}{% endif %}
       </td>
       <td>{{ record.render.effective_date }}</td>
       <td>{{ production.warehouse.render.rec_name }}</td>
-      <td><a href='{{ parameters['base_url'] }}/model/stock.move/{{ record.raw.id }};name="{{ _('Move') }}"'><i class="fas fa-arrow-right"></i></a></td>
+      <td><a href='{{ parameters.base_url }}/model/stock.move/{{ record.raw.id }};name="{{ _('Move') }}"'><i class="fas fa-arrow-right"></i></a></td>
     </tr>{% endfor %}
   </tbody>
 </table>
@@ -78,13 +78,13 @@
   </thead>
   <tbody>
     {% for record in records %}<tr>
-      {% if parameters.get('lot') %}<td>{% if record.raw.lot %}<a href='{{ parameters['base_url'] }}/model/stock.lot/{{ record.raw.id }};name="{{ _('Move') }}"'>{{ record.lot and record.lot.render.number }}</a>{% endif %}</td>{% endif %}
-      <td>{{ record.render.quantity }}</td>
-      <td>{{ record.uom.render.rec_name }}</td>
+      {% if parameters.get('lot') %}<td>{% if record.raw.lot %}<a href='{{ parameters.base_url }}/model/stock.lot/{{ record.lot.raw.id }};name="{{ _('Move') }}"'>{{ record.lot and record.lot.render.number }}</a>{% endif %}</td>{% endif %}
+      <td><a href='{{ parameters.base_url }}/model/stock.move/{{ record.raw.id }};name="{{ record.render.rec_name }}"'>{{ record.render.quantity }}</a></td>
+      <td>{{ record.uom.render.symbol }}</td>
       <td>{% if record.origin %}{{ origin(record, parameters) }}{% endif %}
       </td>
       <td>{{ record.render.effective_date }}</td>
-      <td><a href='{{ parameters['base_url'] }}/model/stock.move/{{ record.raw.id }};name="{{ _('Move') }}"'><i class="fas fa-arrow-right"></i></a></td>
+      <td><a href='{{ parameters.base_url }}/model/stock.move/{{ record.raw.id }};name="{{ _('Move') }}"'><i class="fas fa-arrow-right"></i></a></td>
     </tr>{% endfor %}
   </tbody>
 </table>

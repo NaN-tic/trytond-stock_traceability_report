@@ -2,7 +2,6 @@
 # copyright notices and license terms.
 import os
 from datetime import datetime
-from sql.aggregate import Sum
 from trytond.config import config
 from trytond.model import fields, ModelView
 from trytond.pool import Pool
@@ -148,21 +147,23 @@ class PrintStockTraceabilityReport(HTMLReport):
                 keys += ((lot.product, lot),)
 
         def compute_quantites(sql_where):
-            query = move.select(Sum(move.quantity), where=sql_where)
-            cursor.execute(*query)
-            total = cursor.fetchone()[0] or 0
+            Uom = Pool().get('product.uom')
+
             query = move.select(move.id.as_('move_id'), where=sql_where,
                 order_by=move.effective_date.desc)
             cursor.execute(*query)
             move_ids = [m[0] for m in cursor.fetchall()]
-            moves = [DualRecord(m) for m in Move.browse(move_ids)]
+            moves = Move.browse(move_ids)
+            total = sum([Uom.compute_qty(
+                            m.uom, m.quantity, m.product.default_uom, True)
+                            for m in moves])
+            moves = [DualRecord(m) for m in moves]
             return total, moves
 
         records = []
         for key in keys:
             product = key[0]
             lot = key[1]
-            digits = product.__class__.cost_price.digits[1]
 
             # Initial stock
             context = {}
@@ -207,6 +208,8 @@ class PrintStockTraceabilityReport(HTMLReport):
                 & (move.to_location.in_(locations)))
             customer_returns_total, customer_returns = compute_quantites(sql_where)
 
+            production_outs_total = 0
+            production_ins_total = 0
             if Production:
                 # production_outs: to_location = production
                 sql_where = (sql_common_where
@@ -239,50 +242,51 @@ class PrintStockTraceabilityReport(HTMLReport):
 
             sql_where = (sql_common_where
                 & (~move.from_location.in_(locations_in_out))
-                & (move.to_location.in_(locations_in_out)))
+                & (move.to_location.in_(locations)))
             in_to_total, in_to = compute_quantites(sql_where)
 
             # Outputs from our warehouse
             sql_where = (sql_common_where
-                & (move.from_location.in_(locations_in_out))
+                & (move.from_location.in_(locations))
                 & (~move.to_location.in_(locations_in_out)))
             out_to_total, out_to = compute_quantites(sql_where)
 
             records.append({
                 'product': DualRecord(product),
                 'lot': DualRecord(lot),
-                'initial_stock': round(initial_stock, digits),
-                'supplier_incommings_total': round(
-                    supplier_incommings_total, digits),
+                'initial_stock': initial_stock,
+                'supplier_incommings_total': supplier_incommings_total,
                 'supplier_incommings': supplier_incommings,
-                'supplier_return_total': (-round(supplier_returns_total, digits)
+                'supplier_returns_total': (-supplier_returns_total
                     if supplier_returns_total else 0),
                 'supplier_returns': supplier_returns,
                 'customer_outgoings_total': (
-                    -round(customer_outgoings_total, digits)
-                    if customer_outgoings_total else 0),
+                    -customer_outgoings_total if customer_outgoings_total else 0),
                 'customer_outgoings': customer_outgoings,
-                'customer_returns_total': round(customer_returns_total, digits),
+                'customer_returns_total': customer_returns_total,
                 'customer_returns': customer_returns,
-                'production_outs_total': (round(production_outs_total, digits)
+                'production_outs_total': (production_outs_total
                     if Production else 0),
                 'production_outs': production_outs if Production else 0,
-                'production_ins_total': (-round(production_ins_total, digits)
+                'production_ins_total': (-production_ins_total
                     if Production else 0),
                 'production_ins': production_ins if Production else 0,
-                'lost_found_total': round(
-                    lost_found_from_total - lost_found_to_total, digits),
-                'lost_found_from_total': round(lost_found_from_total, digits),
+                'lost_found_total':
+                    lost_found_from_total - lost_found_to_total,
+                'lost_found_from_total': lost_found_from_total,
                 'lost_found_from': lost_found_from,
-                'lost_found_to_total': (-round(lost_found_to_total, digits)
+                'lost_found_to_total': (-lost_found_to_total
                     if lost_found_to_total else 0),
                 'lost_found_to': lost_found_to,
-                'in_to_total': (round(in_to_total, digits)
-                    if in_to_total else 0),
+                'in_to_total': in_to_total if in_to_total else 0,
                 'in_to': in_to,
-                'out_to_total': (-round(out_to_total, digits)
-                    if out_to_total else 0),
+                'out_to_total': -out_to_total if out_to_total else 0,
                 'out_to': out_to,
+                'total': (initial_stock + supplier_incommings_total
+                    + (-supplier_returns_total) + (-customer_outgoings_total)
+                    + customer_returns_total + production_outs_total
+                    + (-production_ins_total) + (lost_found_from_total - lost_found_to_total)
+                    + in_to_total + (-out_to_total)),
                 })
         return records, parameters
 
