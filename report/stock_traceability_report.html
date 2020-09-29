@@ -39,7 +39,7 @@
         <!-- Initial Stock -->
         <tr>
           <td>{{ _('Initial Stock') }}</td>
-          <td>{{ record.initial_stock|render_field }}</td>
+          <td>{{ record.initial_stock|render }}</td>
         </tr>
 
         <!-- Supplier Incoming -->
@@ -49,7 +49,7 @@
                 <i class="fas fa-angle-double-right"></i> {{ _('Supplier Incomming') }}
             </a>
           </td>
-          <td>{{ record.supplier_incommings_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.supplier_incommings_total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr>
         <tr>
           <td colspan="2">
@@ -64,7 +64,7 @@
                 <i class="fas fa-angle-double-right"></i> {{ _('Supplier Returns') }}
             </a>
           </td>
-          <td>{{ record.supplier_returns_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.supplier_returns_total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr>
         <tr>
           <td colspan="2">
@@ -79,7 +79,7 @@
                 <i class="fas fa-angle-double-right"></i> {{ _('Customer Outgoings') }}
             </a>
           </td>
-          <td>{{ record.customer_outgoings_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.customer_outgoings_total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr>
         <tr>
           <td colspan="2">
@@ -94,7 +94,7 @@
                 <i class="fas fa-angle-double-right"></i> {{ _('Customer Returns') }}
             </a>
           </td>
-          <td>{{ record.customer_returns_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.customer_returns_total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr></td>
         </tr>
         <tr>
@@ -112,7 +112,7 @@
                 <i class="fas fa-angle-double-right"></i> {{ _('Production Out') }}
             </a>
           </td>
-          <td>{{ record.production_outs_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.production_outs_total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr>
         <tr>
           <td colspan="2">
@@ -127,7 +127,7 @@
                 <i class="fas fa-angle-double-right"></i> {{ _('Production In') }}
             </a>
           </td>
-          <td>{{ record.production_ins_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.production_ins_total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr>
         <tr>
           <td colspan="2">
@@ -143,14 +143,14 @@
                 <i class="fas fa-angle-double-right"></i> {{ _('Inventory') }}
             </a>
           </td>
-          <td>{{ record.lost_found_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.lost_found_total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr>
         <tr>
           <td colspan="2">
             <table class="table collapse multi-collapse" id="inventory">
               {% if record.lost_found_from %}<tr>
                 <td><i class="fas fa-angle-double-right"></i> {{ _('From Lost & Found') }}</td>
-                <td>{{ record.lost_found_from_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+                <td>{{ record.lost_found_from_total|render }} {{ record.product.default_uom.render.symbol }}</td>
               </tr>
               <tr>
                 <td colspan="2">
@@ -159,7 +159,7 @@
               </tr>{% endif %}
               {% if record.lost_found_to %}<tr>
                 <td><i class="fas fa-angle-double-right"></i> {{ _('To Lost & Found') }}</td>
-                <td>{{ record.lost_found_to_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+                <td>{{ record.lost_found_to_total|render }} {{ record.product.default_uom.render.symbol }}</td>
               </tr>
               <tr>
                 <td colspan="2">
@@ -177,7 +177,7 @@
                 <i class="fas fa-angle-double-right"></i> {{ _('Entries from outside warehouse') }}
             </a>
           </td>
-          <td>{{ record.in_to_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.in_to_total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr>
         <tr>
           <td colspan="2">
@@ -192,7 +192,7 @@
                  <i class="fas fa-angle-double-right"></i> {{ _('Outputs from our warehouse') }}
              </a>
            </td>
-           <td>{{ record.out_to_total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+           <td>{{ record.out_to_total|render }} {{ record.product.default_uom.render.symbol }}</td>
          </tr>
          <tr>
            <td colspan="2">
@@ -202,7 +202,7 @@
 
         <tr>
           <td>{{ _('Total') }}</td>
-          <td>{{ record.total|render_field }} {{ record.product.default_uom.render.symbol }}</td>
+          <td>{{ record.total|render }} {{ record.product.default_uom.render.symbol }}</td>
         </tr>
 
         {% endfor %}
