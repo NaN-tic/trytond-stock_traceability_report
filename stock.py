@@ -2,7 +2,6 @@
 # copyright notices and license terms.
 import os
 from datetime import datetime
-from trytond.config import config
 from trytond.model import fields, ModelView
 from trytond.pool import Pool
 from trytond.pyson import Bool, Eval, If
@@ -11,9 +10,6 @@ from trytond.transaction import Transaction
 from trytond.modules.html_report.html_report import HTMLReport
 from trytond.modules.html_report.engine import DualRecord
 from trytond.url import http_host
-
-__all__ = ['PrintStockTraceabilityStart', 'PrintStockTraceability',
-    'PrintStockTraceabilityReport']
 
 
 class PrintStockTraceabilityStart(ModelView):
