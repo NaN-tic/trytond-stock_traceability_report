@@ -31,7 +31,6 @@ class StockTraceabilityReportTestCase(ModuleTestCase):
         template, = Template.create([{
                     'name': 'Test Move',
                     'type': 'goods',
-                    'list_price': Decimal(1),
                     'default_uom': unit.id,
                     }])
         product, = Product.create([{
